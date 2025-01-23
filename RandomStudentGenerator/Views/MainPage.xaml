@@ -3,8 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:controls="clr-namespace:RandomStudentGenerator.CustomControls"
              x:Class="RandomStudentGenerator.MainPage">
+    <ContentPage.Resources>
+        <StyleSheet Source="/Styles/Main.css" />
+    </ContentPage.Resources>
 
-    <Grid >
+    <Grid StyleClass="mainGrid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="7*"/>
             <ColumnDefinition Width="3*"/>
@@ -13,11 +16,11 @@
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*"/>
-                <RowDefinition Height="9*"/>
+                <RowDefinition Height="10*"/>
             </Grid.RowDefinitions>
 
-            <controls:ClassSelector Grid.Row="0"/>
-            <controls:StudentsList Grid.Row="1"/>
+            <controls:ClassSelector x:Name="classSelector" Grid.Row="0"/>
+            <controls:StudentsList x:Name="studentList" Grid.Row="1"/>
         </Grid>
 
         <Grid Grid.Column="1">
