@@ -5,6 +5,7 @@
         public MainPage()
         {
             InitializeComponent();
+            classSelector.SelectorChanged += (s, data) => studentList.UpdateData(data);
         }
 
     }
