@@ -2,10 +2,18 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="RandomStudentGenerator.CustomControls.HappyNumber">
-    <VerticalStackLayout>
-        <Label 
-            Text="happy number"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+    <ContentView.Resources>
+        <StyleSheet Source="/Styles/HappyNum.css" />
+    </ContentView.Resources>
+    <Frame StyleClass="box">
+        <FlexLayout StyleClass="happyNumberBox">
+            <Label 
+                Text="happy number"
+                StyleClass="happyNumber" 
+                x:Name="happyNumber"/>
+            <Label 
+                Text="Todays Happy Number"
+                x:Name="happyNumberinfo"/>
+        </FlexLayout>
+    </Frame>
 </ContentView>
