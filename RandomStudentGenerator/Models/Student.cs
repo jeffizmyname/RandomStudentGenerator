@@ -8,10 +8,11 @@ namespace RandomStudentGenerator.Models
 {
     public class Student
     {
-        string Id { get; set; }
-        string Name { get; set; }
-        string Surname { get; set; }
-        List<Presence> Presences { get; set; }
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string Surname { get; set; }
+        public List<Presence> Presences { get; set; }
+        public string FullName => $"{Name} {Surname}";
 
         public Student(string id, string name, string surname)
         {

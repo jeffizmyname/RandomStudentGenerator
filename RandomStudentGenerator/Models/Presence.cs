@@ -8,8 +8,8 @@ namespace RandomStudentGenerator.Models
 {
     public class Presence
     {
-        DateTime date { get; set; }
-        bool isPresent { get; set; }
+        public DateTime date { get; set; }
+        public bool isPresent { get; set; }
 
         public Presence(DateTime date, bool isPresent)
         {

@@ -8,13 +8,13 @@ namespace RandomStudentGenerator.Models
 {
     public class Class
     {
-        string className { get; set; }
-        List<Student> students { get; set; }
+        public string className { get; set; }
+        public List<Student> students { get; set; }
 
-        public Class(string className)
+        public Class(string className, List<Student> students)
         {
             this.className = className;
-            students = new List<Student>();
-        }
+            this.students = students;
+    }
     }
 }
