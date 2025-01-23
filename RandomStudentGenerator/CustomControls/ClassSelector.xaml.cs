@@ -1,13 +1,16 @@
 using System.Diagnostics;
+using static RandomStudentGenerator.StorageHandlers.StorageHandler;
 
 namespace RandomStudentGenerator.CustomControls;
 
 public partial class ClassSelector : ContentView
 {
-	public ClassSelector()
-	{
-		InitializeComponent();
-	}
+    public event EventHandler<string>? SelectorChanged;
+    public ClassSelector()
+    {
+        InitializeComponent();
+        classPicker.ItemsSource = ReadClassNames();
+    }
 
     private async Task PickMultipleTextFilesAsync()
     {
@@ -16,10 +19,8 @@ public partial class ClassSelector : ContentView
             var customFileType = new FilePickerFileType(
                   new Dictionary<DevicePlatform, IEnumerable<string>>
                   {
-                       { DevicePlatform.iOS, new[] { "public.text" } },
-                       { DevicePlatform.Android, new[] { "text/plain" } },
-                       { DevicePlatform.WinUI, new[] { ".txt" } },
-                       { DevicePlatform.macOS, new[] { "txt" } },
+                       { DevicePlatform.WinUI, new[] { ".csv" } },
+                       { DevicePlatform.macOS, new[] { "csv" } },
                   });
 
             var pickOptions = new PickOptions
@@ -39,8 +40,11 @@ public partial class ClassSelector : ContentView
                     using var reader = new StreamReader(stream);
                     string content = await reader.ReadToEndAsync();
 
-                    Debug.WriteLine($"File: {fileName}");
-                    Debug.WriteLine($"Content: {content}");
+                    Debug.WriteLine($"FilePAth: {file.FullPath}");
+                    //Debug.WriteLine($"File: {fileName}");
+                    //Debug.WriteLine($"Content: {content}");
+                    AddClass(file.FullPath);
+                    classPicker.ItemsSource = ReadClassNames();
                 }
             }
         }
@@ -53,5 +57,14 @@ public partial class ClassSelector : ContentView
     private async void addClassButton_Clicked(object sender, EventArgs e)
     {
         await PickMultipleTextFilesAsync();
+    }
+
+    private void classPicker_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        string? selectedItem = classPicker.SelectedItem as string;
+        if (selectedItem != null)
+        {
+            SelectorChanged?.Invoke(this, selectedItem);
+        }
     }
 }
