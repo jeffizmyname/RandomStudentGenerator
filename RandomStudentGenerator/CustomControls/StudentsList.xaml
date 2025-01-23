@@ -2,10 +2,31 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="RandomStudentGenerator.CustomControls.StudentsList">
-    <VerticalStackLayout>
-        <Label 
-            Text="stud list"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+    <ContentView.Resources>
+        <StyleSheet Source="/Styles/List.css" />
+    </ContentView.Resources>
+    <StackLayout StyleClass="tableWrapper">
+        <Grid StyleClass="usersGrid" RowDefinitions="40, *"  RowSpacing="20">
+            <Grid StyleClass="header" Grid.Row="0" ColumnDefinitions="1*, 2*, 5*, *">
+                <Label Grid.Column="0" Text="Nr"/>
+                <Label Grid.Column="1" Text="Student"/>
+                <Label Grid.Column="2" Text="Attendance"/>
+                <DatePicker StyleClass="datePicker" Grid.Column="3"/>
+            </Grid>
+            <ScrollView Grid.Row="1">
+                <CollectionView x:Name="studentsList" ItemsSource="{Binding Students}" >
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout StyleClass="studentWrapper">
+                                <Grid StyleClass="studentGrid" ColumnDefinitions="1*, 2*, 6*">
+                                    <Label Grid.Column="0" Text="{Binding Id}" />
+                                    <Label Grid.Column="1" Text="{Binding FullName}" />
+                                </Grid>
+                            </StackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </ScrollView>
+        </Grid>
+    </StackLayout>
 </ContentView>
