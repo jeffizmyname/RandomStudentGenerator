@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="RandomStudentGenerator.CustomControls.ClassSelector">
-    <HorizontalStackLayout>
-        <Picker/>
-        <Button x:Name="addClassButton" Text="Add new Class" Clicked="addClassButton_Clicked"/>
-    </HorizontalStackLayout>
+<ContentView
+    x:Class="RandomStudentGenerator.CustomControls.ClassSelector"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    <ContentView.Resources>
+        <StyleSheet Source="/Styles/Selector.css" />
+    </ContentView.Resources>
+    <Frame StyleClass="box">
+        <FlexLayout StyleClass="selectorBox">
+            <Picker StyleId="classPicker" x:Name="classPicker" SelectedIndexChanged="classPicker_SelectedIndexChanged" />
+            <Button
+                x:Name="addClassButton"
+                Clicked="addClassButton_Clicked"
+                Text="Add new Class"
+                StyleClass="selectButton" />
+        </FlexLayout>
+    </Frame>
 </ContentView>
