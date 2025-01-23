@@ -5,4 +5,8 @@
     xmlns:maui="using:Microsoft.Maui"
     xmlns:local="using:RandomStudentGenerator.WinUI">
 
+    <maui:MauiWinUIApplication.Resources>
+        <SolidColorBrush x:Key="ComboBoxDropDownBackground" Color="#14b6cb9e" />
+    </maui:MauiWinUIApplication.Resources>
+
 </maui:MauiWinUIApplication>
