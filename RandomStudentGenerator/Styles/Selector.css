@@ -1,0 +1,19 @@
+﻿.selectorBox {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+}
+
+.selectButton {
+    background: #b6cb9e;
+}
+
+.box {
+    padding: 12 10;
+}
+
+#classPicker {
+    width: 150;
+    margin-right: 10;
+}
+

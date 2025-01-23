@@ -1,0 +1,11 @@
+﻿.happyNumberBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.happyNumber {
+    font-size: 250;
+    font-style: bold;
+}

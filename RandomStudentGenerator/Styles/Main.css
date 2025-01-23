@@ -1,0 +1,32 @@
+﻿/*
+    --text: #ebe4ea;
+--background: #190f18;
+--primary: #d099ca;
+--secondary: #7b2b73;
+--accent: #cf43c1;
+
+    --text: #e6edde;
+--background: #0c1008;
+--primary: #b6cb9e;
+--secondary: #3c7051;
+--accent: #63ab90;
+
+    --text: #f4e5f9;
+--background: #0a030d;
+--primary: #ce95e8;
+--secondary: #811c60;
+--accent: #d84d8c;
+
+*/
+
+.mainGrid {
+    background-color: #0c1008;
+    color: #e6edde;
+    padding: 8;
+    font-family: Gabarito;
+}
+
+.box {
+    background: hsla(143, 30%, 34%, .2);
+    margin: 5;
+}
