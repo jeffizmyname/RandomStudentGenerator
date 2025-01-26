@@ -11,8 +11,10 @@
 }
 
 .tableWrapper {
+    margin-left: 10;
     padding: 0;
     background: #0c1008;
+    row-gap: 5;
 }
 
 .header label {
@@ -23,4 +25,26 @@
 
 .datePicker {
     font-size: 20;
+}
+
+.listEntry {
+    width: 220;
+}
+
+.studentButton {
+    margin-top: 10;
+}
+
+.addStudentFlex {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.addStudentBox {
+    padding: 5 10;
+}
+
+.newStudentEntry {
+    margin-right: 5;
 }
