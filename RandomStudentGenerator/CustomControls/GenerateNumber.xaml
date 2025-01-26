@@ -9,6 +9,11 @@
         <FlexLayout StyleClass="generatorBox">
             <Label 
             Text="generate num" />
+            <Button
+                x:Name="generateButton"
+                Clicked="generateButton_Clicked"
+                Text="Generate"
+                StyleClass="button"/>
         </FlexLayout>
     </Frame>
 
