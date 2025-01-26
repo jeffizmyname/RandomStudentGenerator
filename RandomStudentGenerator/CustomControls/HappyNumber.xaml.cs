@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace RandomStudentGenerator.CustomControls;
 
 public partial class HappyNumber : ContentView
@@ -5,8 +7,48 @@ public partial class HappyNumber : ContentView
 	public HappyNumber()
 	{
 		InitializeComponent();
-        Random random = new Random();
-        int number = random.Next(1, 40);
-        happyNumber.Text = number.ToString();
+        GenerateHappyNumber();
+    }
+
+    async void GenerateHappyNumber()
+    {
+        string? lastDate = await SecureStorage.GetAsync("lastDate");
+        Debug.WriteLine("last date: " + lastDate);
+        if (lastDate == null)
+        {
+            lastDate = DateTime.Now.ToString();
+            await SecureStorage.SetAsync("lastDate", lastDate);
+        }
+
+        DateTime lastDateTime = DateTime.Parse(lastDate);
+        DateTime now = DateTime.Now;
+
+        if (lastDateTime.Date != now.Date)
+        {
+            Random random = new Random();
+            int number = random.Next(1, 40);
+            happyNumber.Text = number.ToString();
+            await SecureStorage.SetAsync("lastDate", now.ToString());
+            await SecureStorage.SetAsync("happyNumber", number.ToString());
+
+        }
+        else
+        {
+            string? happyNumber = await SecureStorage.GetAsync("happyNumber");
+            Debug.WriteLine("happy number: " + happyNumber);
+            if (happyNumber != null)
+            {
+                this.happyNumber.Text = happyNumber;
+            } 
+            else
+            {
+                Random random = new Random();
+                int number = random.Next(1, 40);
+                this.happyNumber.Text = number.ToString();
+                await SecureStorage.SetAsync("happyNumber", number.ToString());
+
+            }
+        }
+
     }
 }
