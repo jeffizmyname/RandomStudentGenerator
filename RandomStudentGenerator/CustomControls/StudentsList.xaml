@@ -5,28 +5,40 @@
     <ContentView.Resources>
         <StyleSheet Source="/Styles/List.css" />
     </ContentView.Resources>
-    <StackLayout StyleClass="tableWrapper">
-        <Grid StyleClass="usersGrid" RowDefinitions="40, *"  RowSpacing="20">
-            <Grid StyleClass="header" Grid.Row="0" ColumnDefinitions="1*, 2*, 5*, *">
-                <Label Grid.Column="0" Text="Nr"/>
-                <Label Grid.Column="1" Text="Student"/>
-                <Label Grid.Column="2" Text="Attendance"/>
-                <DatePicker StyleClass="datePicker" Grid.Column="3"/>
-            </Grid>
-            <ScrollView Grid.Row="1">
-                <CollectionView x:Name="studentsList" ItemsSource="{Binding Students}" >
+    <Grid StyleClass="tableWrapper" RowDefinitions="*, 80" RowSpacing="20">
+        <ScrollView Grid.Row="0">
+            <StackLayout>
+                <Grid StyleClass="header" ColumnDefinitions="1*, 3*, 3*, *">
+                    <Label Grid.Column="0" Text="Nr"/>
+                    <Label Grid.Column="1" Text="Student"/>
+                    <Label Grid.Column="2" Text="Attendance"/>
+                    <DatePicker StyleClass="datePicker" Grid.Column="3"/>
+                </Grid>
+                <CollectionView x:Name="studentsList" ItemsSource="{Binding Students}">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <StackLayout StyleClass="studentWrapper">
-                                <Grid StyleClass="studentGrid" ColumnDefinitions="1*, 2*, 6*">
+                                <Grid StyleClass="studentGrid" ColumnDefinitions="1*, 3*, 4*">
                                     <Label Grid.Column="0" Text="{Binding Id}" />
-                                    <Label Grid.Column="1" Text="{Binding FullName}" />
+                                    <HorizontalStackLayout Grid.Column="1">
+                                        <Entry Text="{Binding Name}" StyleClass="listEntry"/>
+                                        <Entry Text="{Binding Surname}" StyleClass="listEntry"/>
+                                    </HorizontalStackLayout>
+                                    <CheckBox Grid.Column="2" IsChecked="{Binding currentPresence.isPresent}" />
                                 </Grid>
                             </StackLayout>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
-            </ScrollView>
-        </Grid>
-    </StackLayout>
+            </StackLayout>
+        </ScrollView>
+
+        <Frame StyleClass="box, addStudentBox" Grid.Row="1">
+            <FlexLayout StyleClass="addStudentFlex">
+                <Entry x:Name="newStudentName" Placeholder="Enter Student Name" StyleClass="newStudentEntry"/>
+                <Entry x:Name="newStudentSurname" Placeholder="Enter Student Surname" StyleClass="newStudentEntry"/>
+                <Button x:Name="addStudentButton" Text="Add Student" Clicked="addStudentButton_Clicked" StyleClass="button"/>
+            </FlexLayout>
+        </Frame>
+    </Grid>
 </ContentView>
