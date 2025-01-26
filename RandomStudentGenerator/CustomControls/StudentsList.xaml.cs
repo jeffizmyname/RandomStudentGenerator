@@ -16,6 +16,17 @@ public partial class StudentsList : ContentView
 
     public void UpdateData(string className)
     {
-        _classViewModel.setClass(ReadClass(className));
+        _classViewModel.setClass(className);
+    }
+
+    public void CreateClass(string className)
+    {
+        _classViewModel.newClass(className);
+        UpdateData(className);
+    }
+
+    private void addStudentButton_Clicked(object sender, EventArgs e)
+    {
+        _classViewModel.addStudent(newStudentName.Text, newStudentSurname.Text);
     }
 }
