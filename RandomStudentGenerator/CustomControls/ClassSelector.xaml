@@ -12,8 +12,20 @@
             <Button
                 x:Name="addClassButton"
                 Clicked="addClassButton_Clicked"
-                Text="Add new Class"
+                Text="Add From File"
                 StyleClass="selectButton" />
+
+            <Button
+                x:Name="newClassButton"
+                Clicked="newClassButton_Clicked"
+                Text="New Class"
+                StyleClass="selectButton"/>
+
+            <Entry
+                x:Name="newClassName"
+                Placeholder="Enter Class Name"
+                StyleClass="entry" />
+
         </FlexLayout>
     </Frame>
 </ContentView>
