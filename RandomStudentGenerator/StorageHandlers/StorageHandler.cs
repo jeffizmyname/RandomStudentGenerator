@@ -29,6 +29,19 @@ namespace RandomStudentGenerator.StorageHandlers
             File.Copy(filePath, destPath, true);
         }
 
+        public static void CreateNewClass(string className)
+        {
+            Init();
+            var filePath = Path.Combine(rootPath, className + ".csv");
+            if (File.Exists(filePath)) return;
+            using (var stream = new StreamWriter(filePath))
+            using (var csv = new CsvWriter(stream, CultureInfo.CurrentCulture))
+            {
+                csv.Context.RegisterClassMap<StudentMap>();
+                csv.WriteRecords(new List<Student>());
+            }
+        }
+
         public static List<string> ReadClassNames()
         {
             Init();
