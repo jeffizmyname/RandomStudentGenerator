@@ -6,6 +6,7 @@ namespace RandomStudentGenerator.CustomControls;
 public partial class ClassSelector : ContentView
 {
     public event EventHandler<string>? SelectorChanged;
+    public event EventHandler<string>? newClass;
     public ClassSelector()
     {
         InitializeComponent();
@@ -57,6 +58,13 @@ public partial class ClassSelector : ContentView
     private async void addClassButton_Clicked(object sender, EventArgs e)
     {
         await PickMultipleTextFilesAsync();
+    }
+
+    private void newClassButton_Clicked(object sender, EventArgs e)
+    {
+        newClass?.Invoke(this, newClassName.Text);
+        classPicker.ItemsSource = ReadClassNames();
+        classPicker.SelectedItem = newClassName.Text;
     }
 
     private void classPicker_SelectedIndexChanged(object sender, EventArgs e)
