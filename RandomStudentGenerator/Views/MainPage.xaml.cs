@@ -6,6 +6,7 @@
         {
             InitializeComponent();
             classSelector.SelectorChanged += (s, data) => studentList.UpdateData(data);
+            classSelector.newClass += (s, data) => studentList.CreateClass(data);
         }
 
     }
