@@ -8,11 +8,18 @@
     <Frame StyleClass="box">
         <FlexLayout StyleClass="generatorBox">
             <Label 
+                x:Name="generatedNumber"
+                StyleClass="generatedNumber"
             Text="generate num" />
             <Button
                 x:Name="generateButton"
                 Clicked="generateButton_Clicked"
                 Text="Generate"
+                StyleClass="button"/>
+            <Button
+                x:Name="connectButton"
+                Clicked="connectButton_Clicked"
+                Text="Connect"
                 StyleClass="button"/>
         </FlexLayout>
     </Frame>
