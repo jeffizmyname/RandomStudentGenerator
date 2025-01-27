@@ -96,5 +96,26 @@ namespace RandomStudentGenerator.StorageHandlers
             }
 
         }
+
+        public static int getClassSize(string className)
+        {
+            Init();
+            var filePath = Path.Combine(rootPath, className + ".csv");
+            if (!File.Exists(filePath)) return -1;
+            var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                DetectDelimiter = true,
+                HasHeaderRecord = true,
+                PrepareHeaderForMatch = args => args.Header.ToLower(),
+                HeaderValidated = null,
+                MissingFieldFound = null
+            };
+            using (var stream = new StreamReader(filePath))
+            using (var csv = new CsvReader(stream, config))
+            {
+                var records = csv.GetRecords<Student>().ToList();
+                return records.Count;
+            }
+        }
     }
 }
