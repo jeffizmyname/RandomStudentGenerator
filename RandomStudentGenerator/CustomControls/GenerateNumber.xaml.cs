@@ -7,17 +7,20 @@ using System.IO.Ports;
 
 public partial class GenerateNumber : ContentView
 {
-    private string className;
+    private string? className;
     private List<int> lastThreePool = new();
     Random random = new Random();
-    static SerialPort serialPort;
+    private static SerialPort? serialPort;
+    private string ComPortName = "COM12";
 
     public GenerateNumber()
-	{
-		InitializeComponent();
-        serialPort = new SerialPort("COM12", 9600);
-        serialPort.DataReceived += SerialPort_DataReceived;
-        
+    {
+        InitializeComponent();
+        if (OperatingSystem.IsWindows())
+        {
+            serialPort = new SerialPort(ComPortName, 9600);
+            serialPort.DataReceived += SerialPort_DataReceived;
+        }
     }
 
     public void UpdateData(string className)
@@ -32,9 +35,9 @@ public partial class GenerateNumber : ContentView
 
     private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
     {
+        if (serialPort == null || !OperatingSystem.IsWindows()) return;
         try
         {
-            // Read all available data
             string data = serialPort.ReadExisting();
             if (data.Equals("1"))
             {
@@ -53,8 +56,7 @@ public partial class GenerateNumber : ContentView
 
     private int generateRandomNumber()
     {
-
-        int classSize = getClassSize(className);
+        int classSize = getClassSize(className ?? "");
         if (classSize <= 0) return -1;
         int number = random.Next(1, classSize + 1);
         while (lastThreePool.Contains(number))
@@ -68,6 +70,8 @@ public partial class GenerateNumber : ContentView
 
     private void connectButton_Clicked(object sender, EventArgs e)
     {
+        if (serialPort == null || !OperatingSystem.IsWindows()) return;
+
         if (serialPort.IsOpen)
         {
             connectButton.Text = "Disconnect";
@@ -76,7 +80,18 @@ public partial class GenerateNumber : ContentView
         else
         {
             connectButton.Text = "Connect";
-            serialPort.Open();
+            try
+            {
+                serialPort.Open();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                Console.WriteLine("Error: Port {0} is in use", ComPortName);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error opening port: {ex.Message}");
+            }
         }
     }
 }
