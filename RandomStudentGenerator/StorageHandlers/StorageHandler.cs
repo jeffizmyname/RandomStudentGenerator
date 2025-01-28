@@ -76,7 +76,7 @@ namespace RandomStudentGenerator.StorageHandlers
             }
         }
 
-        public static void AddStudent(Student student, string className)
+        public static void AddStudent(List<Student> students, string className)
         {
             Init();
             var filePath = Path.Combine(rootPath, className + ".csv");
@@ -86,13 +86,14 @@ namespace RandomStudentGenerator.StorageHandlers
             {
                 DetectDelimiter = true,
                 HasHeaderRecord = true,
+                NewLine = Environment.NewLine
             };
 
-            using (var stream = new StreamWriter(filePath, append: true))
+            using (var stream = new StreamWriter(filePath))
             using (var csv = new CsvWriter(stream, config))
             {
                 csv.Context.RegisterClassMap<StudentMap>();
-                csv.WriteRecord(student);
+                csv.WriteRecords(students);
             }
 
         }

@@ -31,7 +31,7 @@ namespace RandomStudentGenerator.ViewModels
             var student = new Student(0, name, surname);
             Class.students.Add(student);
             sortStudents();
-            AddStudent(Class.students.Find(s => s.Name == name && s.Surname == surname), Class.className);
+            AddStudent(Students.ToList(), Class.className);
         }
 
         public void setClass(string className)
