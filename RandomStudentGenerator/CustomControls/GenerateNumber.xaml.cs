@@ -1,13 +1,14 @@
 namespace RandomStudentGenerator.CustomControls;
 
 using System.Diagnostics;
-using static RandomStudentGenerator.StorageHandlers.StorageHandler;
 using System;
 using System.IO.Ports;
+using RandomStudentGenerator.StorageHandlers;
+using System.Text.Json;
 
 public partial class GenerateNumber : ContentView
 {
-    private string? className;
+    private string? classNameCurrent;
     private List<int> lastThreePool = new();
     Random random = new Random();
     private static SerialPort? serialPort;
@@ -21,19 +22,16 @@ public partial class GenerateNumber : ContentView
             serialPort = new SerialPort(ComPortName, 9600);
             serialPort.DataReceived += SerialPort_DataReceived;
         }
+        LoadLastThreePool();
     }
 
-    public void UpdateData(string className)
+    private async void generateButton_Clicked(object sender, EventArgs e)
     {
-        this.className = className;
+        int result = await generateRandomNumber();
+        generatedNumber.Text = result.ToString();
     }
 
-    private void generateButton_Clicked(object sender, EventArgs e)
-    {
-        generatedNumber.Text = generateRandomNumber().ToString();
-    }
-
-    private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
+    private async void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
     {
         if (serialPort == null || !OperatingSystem.IsWindows()) return;
         try
@@ -41,7 +39,7 @@ public partial class GenerateNumber : ContentView
             string data = serialPort.ReadExisting();
             if (data.Equals("1"))
             {
-                string dataSend = generateRandomNumber().ToString();
+                string dataSend = (await generateRandomNumber()).ToString();
                 MainThread.BeginInvokeOnMainThread(() => generatedNumber.Text = dataSend);
                 serialPort.WriteLine(dataSend);
                 Debug.WriteLine("data to send: " + dataSend);
@@ -54,18 +52,39 @@ public partial class GenerateNumber : ContentView
         }
     }
 
-    private int generateRandomNumber()
+    private async Task<int> generateRandomNumber()
     {
-        int classSize = getClassSize(className ?? "");
-        if (classSize <= 0) return -1;
-        int number = random.Next(1, classSize + 1);
-        while (lastThreePool.Contains(number))
+        if(classNameCurrent != StorageHandler.currentClass)
+        {
+            classNameCurrent = StorageHandler.currentClass;
+            lastThreePool.Clear();
+            await SecureStorage.SetAsync("lastThreePool", JsonSerializer.Serialize(lastThreePool));
+        }
+
+        int classSize = StorageHandler.currentClassSize;
+        if (classSize <= 0) return -1; // do sth if cwass s-size is wess *screeches* than 4 to pwevent infinyit woop
+
+        int number;
+        do
         {
             number = random.Next(1, classSize + 1);
-        }
+
+        } while (lastThreePool.Contains(number) || number == StorageHandler.happyNumber);
+
         lastThreePool.Add(number);
         if (lastThreePool.Count > 3) lastThreePool.RemoveAt(0);
+
+        await SecureStorage.SetAsync("lastThreePool", JsonSerializer.Serialize(lastThreePool));
         return number;
+    }
+
+    private async void LoadLastThreePool()
+    {
+        string? lastThreePoolString = await SecureStorage.GetAsync("lastThreePool");
+        if (lastThreePoolString != null)
+        {
+            lastThreePool = JsonSerializer.Deserialize<List<int>>(lastThreePoolString) ?? new List<int>();
+        }
     }
 
     private void connectButton_Clicked(object sender, EventArgs e)
