@@ -1,3 +1,4 @@
+using RandomStudentGenerator.StorageHandlers;
 using System.Diagnostics;
 
 namespace RandomStudentGenerator.CustomControls;
@@ -28,6 +29,7 @@ public partial class HappyNumber : ContentView
             Random random = new Random();
             int number = random.Next(1, 40);
             happyNumber.Text = number.ToString();
+            StorageHandler.happyNumber = number;
             await SecureStorage.SetAsync("lastDate", now.ToString());
             await SecureStorage.SetAsync("happyNumber", number.ToString());
 
@@ -44,6 +46,7 @@ public partial class HappyNumber : ContentView
             {
                 Random random = new Random();
                 int number = random.Next(1, 40);
+                StorageHandler.happyNumber = number;
                 this.happyNumber.Text = number.ToString();
                 await SecureStorage.SetAsync("happyNumber", number.ToString());
 
