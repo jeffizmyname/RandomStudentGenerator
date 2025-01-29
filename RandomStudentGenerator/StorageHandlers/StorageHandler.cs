@@ -17,6 +17,10 @@ namespace RandomStudentGenerator.StorageHandlers
     {
         private static readonly string rootPath = Path.Combine(FileSystem.AppDataDirectory, "studentsGenerator");
 
+        public static string currentClass { get; set; } = "";
+        public static int currentClassSize { get; set; } = 0;
+        public static int happyNumber { get; set; } = 0;
+
         private static void Init()
         {
             if(!Directory.Exists(rootPath)) Directory.CreateDirectory(rootPath);
@@ -28,6 +32,8 @@ namespace RandomStudentGenerator.StorageHandlers
             var fileName = Path.GetFileName(filePath);
             var destPath = Path.Combine(rootPath, fileName);
             File.Copy(filePath, destPath, true);
+            currentClass = fileName;
+            currentClassSize = getClassSize(fileName);
         }
 
         public static void CreateNewClass(string className)
@@ -41,6 +47,8 @@ namespace RandomStudentGenerator.StorageHandlers
                 csv.Context.RegisterClassMap<StudentMap>();
                 csv.WriteRecords(new List<Student>());
             }
+            currentClass = className;
+            currentClassSize = 0;
         }
 
         public static List<string> ReadClassNames()
@@ -72,7 +80,10 @@ namespace RandomStudentGenerator.StorageHandlers
             {
                 var records = csv.GetRecords<Student>().ToList();
                 Debug.WriteLine(records);
+                currentClassSize = records.Count;
+                currentClass = className;
                 return new Class(className, records);
+                
             }
         }
 
@@ -95,7 +106,7 @@ namespace RandomStudentGenerator.StorageHandlers
                 csv.Context.RegisterClassMap<StudentMap>();
                 csv.WriteRecords(students);
             }
-
+            currentClassSize = students.Count;
         }
 
         public static int getClassSize(string className)
