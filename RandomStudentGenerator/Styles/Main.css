@@ -26,11 +26,11 @@
     font-family: Gabarito;
 }
 
-.box {
+^Frame {
     background: hsla(143, 30%, 34%, .2);
     margin: 5;
 }
 
-.button {
+^Button {
     background: #b6cb9e;
 }
