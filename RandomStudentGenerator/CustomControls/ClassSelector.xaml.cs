@@ -62,6 +62,7 @@ public partial class ClassSelector : ContentView
 
     private void newClassButton_Clicked(object sender, EventArgs e)
     {
+        if (string.IsNullOrEmpty(newClassName.Text)) return; // zrob cos idk?
         newClass?.Invoke(this, newClassName.Text);
         classPicker.ItemsSource = ReadClassNames();
         classPicker.SelectedItem = newClassName.Text;

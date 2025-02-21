@@ -1,27 +1,56 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="RandomStudentGenerator.CustomControls.GenerateNumber">
+<ContentView
+    x:Class="RandomStudentGenerator.CustomControls.GenerateNumber"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
     <ContentView.Resources>
         <StyleSheet Source="/Styles/Generator.css" />
     </ContentView.Resources>
     <Frame StyleClass="box">
-        <FlexLayout StyleClass="generatorBox">
-            <Label 
+        <Grid RowDefinitions="*, 90">
+            <Label
                 x:Name="generatedNumber"
+                Grid.Row="0"
+                HorizontalOptions="Center"
                 StyleClass="generatedNumber"
-            Text="generate num" />
-            <Button
-                x:Name="generateButton"
-                Clicked="generateButton_Clicked"
-                Text="Generate"
-                StyleClass="button"/>
-            <Button
-                x:Name="connectButton"
-                Clicked="connectButton_Clicked"
-                Text="Connect"
-                StyleClass="button"/>
-        </FlexLayout>
-    </Frame>
+                Text="" />
 
+            <Grid
+                Grid.Row="1"
+                ColumnDefinitions="*, *, *, *"
+                ColumnSpacing="10"
+                RowDefinitions="*, *">
+                
+                <HorizontalStackLayout Grid.Row="0" Grid.ColumnSpan="2">
+                    <CheckBox x:Name="includeAbsentCheckBox" CheckedChanged="includeAbsentCheckBox_CheckedChanged" />
+                    <Label Text="Include Absent" VerticalOptions="Center" />
+                </HorizontalStackLayout>
+
+                <Button
+                    x:Name="generateButton"
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Clicked="generateButton_Clicked"
+                    Text="Generate" />
+                <Button
+                    x:Name="connectButton"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Clicked="connectButton_Clicked"
+                    StyleClass="buttonError"
+                    Text="Connect" />
+                <Picker
+                    x:Name="effectsPicker"
+                    Grid.Row="1"
+                    Grid.Column="2"
+                    SelectedIndexChanged="effectsPicker_SelectedIndexChanged" />
+                <Picker
+                    x:Name="colorPicker"
+                    Grid.Row="1"
+                    Grid.Column="3"
+                    SelectedIndexChanged="colorPicker_SelectedIndexChanged" />
+            </Grid>
+
+        </Grid>
+    </Frame>
 </ContentView>
