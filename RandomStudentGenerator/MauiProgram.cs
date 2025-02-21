@@ -11,9 +11,7 @@ namespace RandomStudentGenerator
                 .UseMauiApp<App>()
                 .ConfigureFonts(fonts =>
                 {
-                    fonts.AddFont("Gabarito-VariableFont_wght.ttf", "Gabarito")
-                        .AddFont("OpenSans-Regular.ttf", "OpenSans-Regular")
-                        .AddFont("OpenSans-SemiBold.ttf", "OpenSans-SemiBold");
+                    fonts.AddFont("Gabarito-VariableFont_wght.ttf", "Gabarito");
                 });
 
 #if DEBUG
