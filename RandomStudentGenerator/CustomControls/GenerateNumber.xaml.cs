@@ -12,7 +12,8 @@ public partial class GenerateNumber : ContentView
     private List<int> lastThreePool = new();
     Random random = new Random();
     private static SerialPort? serialPort;
-    private string ComPortName = "COM12";
+    private string ComPortName = "COM4";
+    private bool includeAbsent = true;
 
     public GenerateNumber()
     {
@@ -77,14 +78,16 @@ public partial class GenerateNumber : ContentView
         }
 
         int classSize = StorageHandler.currentClassSize;
-        if (classSize <= 0) return -1; // do sth if cwass s-size is wess *screeches* than 4 to pwevent infinyit woop
+        if (classSize <= 0) return -1;
+        if(includeAbsent && !StorageHandler.currentClassModel.Students.Any(s => s.CurrentPresence.isPresent == true)) return -1;
 
         int number;
         do
         {
             number = random.Next(1, classSize + 1);
-
-        } while (lastThreePool.Contains(number) || number == StorageHandler.happyNumber);
+        } while (lastThreePool.Contains(number)
+                 || number == StorageHandler.happyNumber
+                 || (!StorageHandler.currentClassModel.Students[number - 1].CurrentPresence.isPresent && includeAbsent));
 
         lastThreePool.Add(number);
         if (lastThreePool.Count > 3) lastThreePool.RemoveAt(0);
@@ -145,5 +148,9 @@ public partial class GenerateNumber : ContentView
         executeCommand("setEffect", effectsPicker.SelectedItem.ToString());
 
         }
+
+    private void includeAbsentCheckBox_CheckedChanged(object sender, CheckedChangedEventArgs e)
+    {
+        includeAbsent = !includeAbsent;
     }
 }
