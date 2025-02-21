@@ -1,10 +1,18 @@
-﻿.generatorBox {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
+﻿
 .generatedNumber {
     font-size: 250;
     font-style: bold;
+
+}
+
+.conntrols {
+
+}
+
+.buttonError {
+    background: #cba19e;
+}
+
+.empty {
+
 }
