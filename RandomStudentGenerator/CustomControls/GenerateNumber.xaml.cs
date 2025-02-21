@@ -44,7 +44,22 @@ public partial class GenerateNumber : ContentView
                 serialPort.WriteLine(dataSend);
                 Debug.WriteLine("data to send: " + dataSend);
             }
-            Debug.WriteLine(data);
+            else if(data.Contains("effects:")) 
+            {
+                string[] effects = data.Remove(0, 8).Remove(data.Length-9).Split(',');
+                MainThread.BeginInvokeOnMainThread(() => {
+                    effectsPicker.ItemsSource = effects;
+                    effectsPicker.SelectedIndex = 0;
+                });
+                
+            }
+            else if(data.Contains("colors:"))
+            {
+                string[] colors = data.Remove(0, 7).Remove(data.Length - 8).Split(',');
+                MainThread.BeginInvokeOnMainThread(() => {
+                    colorPicker.ItemsSource = colors;
+                    colorPicker.SelectedIndex = 0;
+                });
         }
         catch (Exception ex)
         {
@@ -111,6 +126,24 @@ public partial class GenerateNumber : ContentView
             {
                 Debug.WriteLine($"Error opening port: {ex.Message}");
             }
+        }
+    }
+
+    private void executeCommand(string command, string parameter = "")
+    {
+        if (serialPort == null || !OperatingSystem.IsWindows()) return;
+        serialPort.WriteLine($"command:{command}:{parameter}");
+    }
+
+    private void colorPicker_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        executeCommand("setColor", colorPicker.SelectedItem.ToString());
+    }
+
+    private void effectsPicker_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        executeCommand("setEffect", effectsPicker.SelectedItem.ToString());
+
         }
     }
 }
