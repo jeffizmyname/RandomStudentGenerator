@@ -63,7 +63,7 @@ namespace RandomStudentGenerator.StorageHandlers
                  .ToList();
         }
 
-        public static Class ReadClass(string className)
+        public static Class ReadClass(string className, DateTime currentSelectedDate)
         {
             Init();
             var filePath = Path.Combine(rootPath, className + ".csv");
@@ -163,21 +163,19 @@ namespace RandomStudentGenerator.StorageHandlers
                 NewLine = Environment.NewLine
             };
 
-            List<string[]> rows = new List<string[]>();
             List<string> headers = new List<string> { "Id", "Name", "Surname" };
 
             var presenceDates = students
                 .SelectMany(s => s.Presences)
-                                        .Select(p => p.date.ToString("yyyy-MM-dd"))
-                                        .Distinct()
-                                        .OrderBy(d => d)
-                                        .ToList();
+                .Select(p => p.date.ToString("yyyy-MM-dd"))
+                .Distinct()
+                .OrderBy(d => d)
+                .ToList();
 
             headers.AddRange(presenceDates);
 
             var rows = new List<string[]>();
 
-            var updatedRows = new List<string[]>();
             foreach (var student in students)
             {
                 var row = new List<string> { student.Id.ToString(), student.Name, student.Surname };
