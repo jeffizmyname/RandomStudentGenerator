@@ -81,30 +81,43 @@ namespace RandomStudentGenerator.StorageHandlers
             using (var stream = new StreamReader(filePath))
             using (var csv = new CsvReader(stream, config))
             {
-                var rows = csv.GetRecords<dynamic>().ToList(); // Read dynamically to handle unknown columns
+                var rows = csv.GetRecords<dynamic>().ToList();
                 if (!rows.Any()) return new Class(className, new List<Student>());
 
-                var headers = csv.Context.Reader.HeaderRecord; // Get column headers
-                var presenceDates = headers.Skip(3).ToList(); // Skip "Id", "Name", "Surname" columns
+                var headers = csv.Context.Reader.HeaderRecord;
+                var presenceDates = headers.Skip(3).ToList();
 
                 List<Student> students = new List<Student>();
 
                 foreach (var row in rows)
                 {
-                    int id = int.Parse(row.id);
-                    string name = row.name;
-                    string surname = row.surname;
+                    var dictRow = row as IDictionary<string, object>; 
 
-                    var student = new Student(id, name, surname) { Presences = new List<Presence>() };
+                    int id = int.Parse(dictRow["id"].ToString());
+                    string name = dictRow["name"].ToString();
+                    string surname = dictRow["surname"].ToString();
 
-                    // Read presence data
+                    var student = new Student(id, name, surname, true) { Presences = new List<Presence>() };
+
                     foreach (var date in presenceDates)
                     {
-                        if (DateTime.TryParse(date, out DateTime parsedDate))
+                        if (DateTime.TryParse(date, out DateTime parsedDate) && dictRow.ContainsKey(date))
                         {
-                            bool isPresent = bool.TryParse(row[date], out bool result) && result;
+                            bool isPresent = bool.TryParse(dictRow[date]?.ToString(), out bool result) && result;
                             student.Presences.Add(new Presence(parsedDate, isPresent));
                         }
+                    }
+
+                    student.Presences = student.Presences.OrderBy(p => p.date).ToList();
+
+                    if (student.Presences.Any())
+                    {
+                        student.CurrentPresence = student.Presences.Find(p => p.date.Date == currentSelectedDate.Date)
+                                                ?? new Presence(DateTime.Now, false);
+                    }
+                    else
+                    {
+                        student.CurrentPresence = new Presence(DateTime.Now, false);
                     }
 
                     students.Add(student);
