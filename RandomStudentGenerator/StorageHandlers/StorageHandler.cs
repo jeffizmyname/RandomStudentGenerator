@@ -21,12 +21,14 @@ namespace RandomStudentGenerator.StorageHandlers
         public static string currentClass { get; set; } = "";
         public static int currentClassSize { get; set; } = 0;
         public static int happyNumber { get; set; } = 0;
+        public static int happyNumberMax { get; set; } = 0;
+
 
         public static ClassViewModel currentClassModel { get; set; }
 
         private static void Init()
         {
-            if(!Directory.Exists(rootPath)) Directory.CreateDirectory(rootPath);
+            if (!Directory.Exists(rootPath)) Directory.CreateDirectory(rootPath);
         }
 
         public static void AddClass(string filePath)
@@ -91,7 +93,7 @@ namespace RandomStudentGenerator.StorageHandlers
 
                 foreach (var row in rows)
                 {
-                    var dictRow = row as IDictionary<string, object>; 
+                    var dictRow = row as IDictionary<string, object>;
 
                     int id = int.Parse(dictRow["id"].ToString());
                     string name = dictRow["name"].ToString();
@@ -230,5 +232,34 @@ namespace RandomStudentGenerator.StorageHandlers
                 return records.Count;
             }
         }
+
+        public static int getMaxHappyNumber()
+        {
+            Init();
+            foreach (var className in ReadClassNames())
+            {
+                var filePath = Path.Combine(rootPath, className + ".csv");
+                if (!File.Exists(filePath)) continue;
+                var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+                {
+                    DetectDelimiter = true,
+                    HasHeaderRecord = true,
+                    PrepareHeaderForMatch = args => args.Header.ToLower(),
+                    HeaderValidated = null,
+                    MissingFieldFound = null
+                };
+                using (var stream = new StreamReader(filePath))
+                using (var csv = new CsvReader(stream, config))
+                {
+                    var records = csv.GetRecords<Student>().ToList();
+                    if (records.Count > happyNumberMax)
+                    {
+                        happyNumberMax = records.Count;
+                    }
+                }
+            }
+            return happyNumberMax;
+        }
+
     }
 }

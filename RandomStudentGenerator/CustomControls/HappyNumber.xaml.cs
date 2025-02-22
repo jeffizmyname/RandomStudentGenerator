@@ -27,7 +27,7 @@ public partial class HappyNumber : ContentView
         if (lastDateTime.Date != now.Date)
         {
             Random random = new Random();
-            int number = random.Next(1, 40);
+            int number = random.Next(1, StorageHandler.getMaxHappyNumber());
             happyNumber.Text = number.ToString();
             StorageHandler.happyNumber = number;
             await SecureStorage.SetAsync("lastDate", now.ToString());
@@ -45,7 +45,7 @@ public partial class HappyNumber : ContentView
             else
             {
                 Random random = new Random();
-                int number = random.Next(1, 40);
+                int number = random.Next(1, StorageHandler.getMaxHappyNumber());
                 StorageHandler.happyNumber = number;
                 this.happyNumber.Text = number.ToString();
                 await SecureStorage.SetAsync("happyNumber", number.ToString());
