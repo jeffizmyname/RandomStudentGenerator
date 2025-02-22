@@ -17,7 +17,7 @@
                     <Label Grid.Column="1" Text="Student" />
                     <HorizontalStackLayout Grid.Column="2">
                         <Label Text="Attendance" />
-                        <DatePicker DateSelected="DatePicker_DateSelected" StyleClass="datePicker" Date="{Binding SelectedDate, Mode=TwoWay}" />
+                        <DatePicker x:Name="presenceDate" DateSelected="DatePicker_DateSelected" StyleClass="datePicker" Date="{Binding SelectedDate, Mode=TwoWay}" />
                     </HorizontalStackLayout>
                 </Grid>
                 <CollectionView x:Name="studentsList" ItemsSource="{Binding Students}">
