@@ -3,6 +3,7 @@
 #include <Adafruit_NeoMatrix.h>
 #include <MPU6050.h>
 #include <vector>
+#include <BluetoothSerial.h>
 
 // Pin configuration
 #define MATRIX_PIN 13
@@ -17,12 +18,15 @@ Adafruit_NeoMatrix matrix = Adafruit_NeoMatrix(8, 8, MATRIX_PIN,
     NEO_GRB + NEO_KHZ800);
 
 // Variables for shake detection
-const float shakeThreshold = 2.5;
+const float shakeThreshold = 2.5; 
 long lastShakeTime = 0;
-const int debounceTime = 2000; 
+const int debounceTime = 2000;
+
+BluetoothSerial SerialBT;
 
 void setup() {
     Serial.begin(9600);
+    SerialBT.begin("ESP32_LED_MATRIX");
 
     // Initialize MPU6050
     Wire.begin();
@@ -39,7 +43,7 @@ void setup() {
     matrix.begin();
     matrix.setTextColor(matrix.Color(128, 128, 128));
     matrix.setTextWrap(false);
-    matrix.show(); 
+    matrix.show();  
 }
 
 // Effects and colors
@@ -53,7 +57,7 @@ std::vector<std::vector<std::pair<int, int>>> rings = {
     {5,7},{4,7},{3,7},{2,7},{1,7},{0,7},{0,6},{0,5},{0,4},{0,3},{0,2},{0,1} }, 
   { {1,1},{2,1},{3,1},{4,1},{5,1},{6,1},{6,2},{6,3},{6,4},{6,5},{6,6},{5,6},{4,6},{3,6},{2,6},{1,6},
     {1,5},{1,4},{1,3},{1,2} }, 
-  { {2,2},{3,2},{4,2},{5,2},{5,3},{5,4},{5,5},{4,5},{3,5},{2,5},{2,4},{2,3} },
+  { {2,2},{3,2},{4,2},{5,2},{5,3},{5,4},{5,5},{4,5},{3,5},{2,5},{2,4},{2,3} }, 
   { {3,3},{4,3},{4,4},{3,4} } 
 };
 
@@ -71,22 +75,24 @@ void loop() {
     x = constrain(x, 0, MATRIX_WIDTH - 1);
     y = constrain(y, 0, MATRIX_HEIGHT - 1);
 
+    // Display dot on the matrix
     //matrix.clear();
     //matrix.setPixelColor(x + y * MATRIX_WIDTH, matrix.Color(0, 0, 255));  // Blue dot
     matrix.show();
 
-    if (Serial.available() > 0)
+    if (SerialBT.available())
     {
-        String receiveVal = Serial.readString();
-        //Serial.println(receiveVal);
+        String receiveVal = SerialBT.readString();
+
         matrix.fillScreen(0);
         matrix.setCursor(8, 0);
+
         if (receiveVal.startsWith("command:")) {
             if (receiveVal.indexOf("effects") > 0) {
-                Serial.println("effects:Flashy,Rainbow,Loading,Explode");
+                SerialBT.println("effects:Flashy,Rainbow,Loading,Explode");
             }
             if (receiveVal.indexOf("colors") > 0) {
-                Serial.println("colors:white,red,green,blue,yellow,cyan");
+                SerialBT.println("colors:white,red,green,blue,yellow,cyan");
             }
             if (receiveVal.indexOf("setEffect") > 0) {
                 receiveVal.replace("command:setEffect:", "");
@@ -113,7 +119,6 @@ void loop() {
         matrix.show();
     }
 
-    // Detect shake
     float magnitude = sqrt(gX * gX + gY * gY + gZ * gZ);
     if (magnitude > shakeThreshold) {
         long currentTime = millis();
@@ -127,9 +132,12 @@ void loop() {
 }
 
 void triggerShakeEffect() {
+    SerialBT.println("1");
     Serial.println("1");
     delay(10);
+    SerialBT.println("0");
     Serial.println("0");
+
 }
 
 uint32_t ColorWheel(byte wheelPos) {
@@ -150,13 +158,13 @@ uint32_t ColorWheel(byte wheelPos) {
 
 
 void theaterChase(uint32_t col, int wait) {
-    for (int a = 0; a < 10; a++) { 
+    for (int a = 0; a < 10; a++) {  
         for (int b = 0; b < 3; b++) { 
             matrix.fillScreen(0);
             for (int c = b; c < matrix.numPixels(); c += 3) {
                 matrix.setPixelColor(c, col); 
             }
-            matrix.show(); 
+            matrix.show();
             delay(wait); 
         }
     }
@@ -171,19 +179,19 @@ void expandingContractingRings(uint32_t col, int wait) {
             int y = rings[r][p].second;
             matrix.drawPixel(x, y, col);
             matrix.show();
-            delay(wait);
+            delay(wait); 
         }
     }
 
-    delay(500)
+    delay(500);
 
     for (int r = 3; r >= 0; r--) {
         for (int p = rings[r].size() - 1; p >= 0; p--) {
             int x = rings[r][p].first;
             int y = rings[r][p].second;
-            matrix.drawPixel(x, y, 0);
+            matrix.drawPixel(x, y, 0);  
             matrix.show();
-            delay(wait);
+            delay(wait); 
         }
     }
 }
@@ -194,7 +202,7 @@ void explodingCenter(uint32_t col, int wait) {
     int centerX = 3;
     int centerY = 3;
 
-    for (int i = 0; i < 4; i++) { 
+    for (int i = 0; i < 4; i++) {
         for (int x = centerX - i; x <= centerX + i; x++) {
             for (int y = centerY - i; y <= centerY + i; y++) {
                 if (x >= 0 && x < 8 && y >= 0 && y < 8) {
@@ -211,11 +219,11 @@ void rainbowSweep(int wait) {
     for (int i = 0; i < 256; i++) {
         for (int j = 0; j < 8; j++) {
             for (int k = 0; k < 8; k++) {
-                matrix.drawPixel(j, k, ColorWheel((i + (j * 32) + (k * 32)) & 255));
+                matrix.drawPixel(j, k, ColorWheel((i + (j * 32) + (k * 32)) & 255)); 
             }
         }
         matrix.show();
-        delay(wait); 
+        delay(wait);  
     }
 }
 
