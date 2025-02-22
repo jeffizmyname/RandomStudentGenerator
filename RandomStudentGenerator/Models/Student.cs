@@ -31,6 +31,13 @@ namespace RandomStudentGenerator.Models
             currentPresence = new Presence(DateTime.Now, false);
         }
 
+        public Student(int id, string name, string surname, bool test)
+        {
+            Id = id;
+            Name = name;
+            Surname = surname;
+        }
+
         public void savePresence(bool isPresent)
         {
             currentPresence = new Presence(DateTime.Now, isPresent);
