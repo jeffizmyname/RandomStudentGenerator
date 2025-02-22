@@ -60,10 +60,10 @@ namespace RandomStudentGenerator.ViewModels
         public void setClass(string className)
         {
 
-            Class = ReadClass(className);
+            Class = ReadClass(className, SelectedDate);
             Students.Clear();
             var sortedStudents = Class.students.OrderBy(s => s.Name).ToList();
-
+            
             for (int i = 0; i < sortedStudents.Count; i++)
             {
                 sortedStudents[i].Id = i + 1;
