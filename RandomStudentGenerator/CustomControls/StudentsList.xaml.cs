@@ -36,7 +36,7 @@ public partial class StudentsList : ContentView
 
     private void DatePicker_DateSelected(object sender, DateChangedEventArgs e)
     {
-        _classViewModel.SelectedDate = e.NewDate;
+        _classViewModel.SelectedDate = presenceDate.Date;
     }
 
     private void AttendanceCheckbox_CheckedChanged(object sender, CheckedChangedEventArgs e)
@@ -44,6 +44,7 @@ public partial class StudentsList : ContentView
         if (sender is CheckBox toggle && toggle.BindingContext is Student student)
         {
             _classViewModel.setStudentPresence(student, e.Value);
+            StorageHandler.savePresence(_classViewModel.Class.className, _classViewModel.Class.students.ToList());
         }
     }
 }
