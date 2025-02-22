@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ArduinoCode", "ArduinoCode", "{87A71E20-DB24-4F09-B09C-A2215B3C9CA6}"
 	ProjectSection(SolutionItems) = preProject
 		generator.ino = generator.ino
+		generatorBT.ino = generatorBT.ino
 	EndProjectSection
 EndProject
 Global
