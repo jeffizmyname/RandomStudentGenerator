@@ -166,49 +166,44 @@ namespace RandomStudentGenerator.StorageHandlers
             List<string[]> rows = new List<string[]>();
             List<string> headers = new List<string> { "Id", "Name", "Surname" };
 
-            if (File.Exists(filePath))
-            {
-                var lines = File.ReadAllLines(filePath);
-                if (lines.Length > 0)
-                {
-                    headers = lines[0].Split(',').ToList();
-                    rows = lines.Skip(1).Select(line => line.Split(',')).ToList();
-                }
-            }
-
-            var presenceDates = students.SelectMany(s => s.Presences)
+            var presenceDates = students
+                .SelectMany(s => s.Presences)
                                         .Select(p => p.date.ToString("yyyy-MM-dd"))
                                         .Distinct()
                                         .OrderBy(d => d)
                                         .ToList();
 
-            foreach (var date in presenceDates)
-            {
-                if (!headers.Contains(date))
-                    headers.Add(date);
-            }
+            headers.AddRange(presenceDates);
+
+            var rows = new List<string[]>();
 
             var updatedRows = new List<string[]>();
             foreach (var student in students)
             {
                 var row = new List<string> { student.Id.ToString(), student.Name, student.Surname };
 
+                var presenceDict = student.Presences
+                    .ToDictionary(p => p.date.ToString("yyyy-MM-dd"), p => p.isPresent);
+
                 foreach (var date in presenceDates)
                 {
-                    var presence = student.Presences.FirstOrDefault(p => p.date.ToString("yyyy-MM-dd") == date);
-                    row.Add(presence != null && presence.isPresent ? "true" : "false");
+                    bool isPresent = presenceDict.TryGetValue(date, out bool value) && value;
+                    row.Add(isPresent ? "true" : "false");
                 }
 
-                updatedRows.Add(row.ToArray());
+                rows.Add(row.ToArray());
             }
 
             using (var writer = new StreamWriter(filePath))
             using (var csv = new CsvWriter(writer, config))
             {
-                csv.WriteField(headers);
+                foreach (var header in headers)
+                {
+                    csv.WriteField(header);
+                }
                 csv.NextRecord();
 
-                foreach (var row in updatedRows)
+                foreach (var row in rows)
                 {
                     foreach (var field in row)
                         csv.WriteField(field);
