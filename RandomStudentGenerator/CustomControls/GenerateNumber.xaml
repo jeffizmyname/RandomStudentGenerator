@@ -43,11 +43,13 @@
                     x:Name="effectsPicker"
                     Grid.Row="1"
                     Grid.Column="2"
+                    IsEnabled="False"
                     SelectedIndexChanged="effectsPicker_SelectedIndexChanged" />
                 <Picker
                     x:Name="colorPicker"
                     Grid.Row="1"
                     Grid.Column="3"
+                    IsEnabled="False"
                     SelectedIndexChanged="colorPicker_SelectedIndexChanged" />
             </Grid>
 
