@@ -22,7 +22,7 @@
                 RowDefinitions="*, *">
                 
                 <HorizontalStackLayout Grid.Row="0" Grid.ColumnSpan="2">
-                    <CheckBox x:Name="includeAbsentCheckBox" CheckedChanged="includeAbsentCheckBox_CheckedChanged" />
+                    <CheckBox x:Name="includeAbsentCheckBox" CheckedChanged="IncludeAbsentCheckBox_CheckedChanged" />
                     <Label Text="Include Absent" VerticalOptions="Center" />
                 </HorizontalStackLayout>
 
@@ -30,25 +30,25 @@
                     x:Name="generateButton"
                     Grid.Row="1"
                     Grid.Column="0"
-                    Clicked="generateButton_Clicked"
+                    Clicked="GenerateButton_Clicked"
                     Text="Generate" />
                 <Button
                     x:Name="connectButton"
                     Grid.Row="1"
                     Grid.Column="1"
-                    Clicked="connectButton_Clicked"
+                    Clicked="ConnectButton_Clicked"
                     StyleClass="buttonError"
                     Text="Connect" />
                 <Picker
                     x:Name="effectsPicker"
                     Grid.Row="1"
                     Grid.Column="2"
-                    SelectedIndexChanged="effectsPicker_SelectedIndexChanged" />
+                    SelectedIndexChanged="EffectsPicker_SelectedIndexChanged" />
                 <Picker
                     x:Name="colorPicker"
                     Grid.Row="1"
                     Grid.Column="3"
-                    SelectedIndexChanged="colorPicker_SelectedIndexChanged" />
+                    SelectedIndexChanged="ColorPicker_SelectedIndexChanged" />
             </Grid>
 
         </Grid>

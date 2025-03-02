@@ -5,9 +5,9 @@ namespace RandomStudentGenerator.CustomControls;
 
 public partial class HappyNumber : ContentView
 {
-	public HappyNumber()
-	{
-		InitializeComponent();
+    public HappyNumber()
+    {
+        InitializeComponent();
         GenerateHappyNumber();
     }
 
@@ -27,7 +27,7 @@ public partial class HappyNumber : ContentView
         if (lastDateTime.Date != now.Date)
         {
             Random random = new Random();
-            int number = random.Next(1, StorageHandler.getMaxHappyNumber());
+            int number = random.Next(1, StorageHandler.GetMaxHappyNumber());
             happyNumber.Text = number.ToString();
             StorageHandler.happyNumber = number;
             await SecureStorage.SetAsync("lastDate", now.ToString());
@@ -42,11 +42,11 @@ public partial class HappyNumber : ContentView
             {
                 this.happyNumber.Text = happyNumber;
                 StorageHandler.happyNumber = int.Parse(happyNumber);
-            } 
+            }
             else
             {
                 Random random = new Random();
-                int number = random.Next(1, StorageHandler.getMaxHappyNumber());
+                int number = random.Next(1, StorageHandler.GetMaxHappyNumber());
                 StorageHandler.happyNumber = number;
                 this.happyNumber.Text = number.ToString();
                 await SecureStorage.SetAsync("happyNumber", number.ToString());

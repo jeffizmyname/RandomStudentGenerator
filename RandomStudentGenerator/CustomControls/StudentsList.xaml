@@ -89,7 +89,7 @@
                     StyleClass="newStudentEntry" />
                 <Button
                     x:Name="addStudentButton"
-                    Clicked="addStudentButton_Clicked"
+                    Clicked="AddStudentButton_Clicked"
                     StyleClass="button"
                     Text="Add Student" />
             </FlexLayout>

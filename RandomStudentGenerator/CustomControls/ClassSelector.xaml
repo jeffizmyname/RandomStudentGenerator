@@ -10,12 +10,12 @@
         <FlexLayout StyleClass="selectorBox">
             <Picker
                 x:Name="classPicker"
-                SelectedIndexChanged="classPicker_SelectedIndexChanged"
+                SelectedIndexChanged="ClassPicker_SelectedIndexChanged"
                 StyleId="classPicker" />
             
             <Button
                 x:Name="addClassButton"
-                Clicked="addClassButton_Clicked"
+                Clicked="AddClassButton_Clicked"
                 StyleClass="selectButton"
                 Text="Add From File" />
 
@@ -26,7 +26,7 @@
 
             <Button
                 x:Name="newClassButton"
-                Clicked="newClassButton_Clicked"
+                Clicked="NewClassButton_Clicked"
                 StyleClass="selectButton"
                 Text="New Class" />
 
