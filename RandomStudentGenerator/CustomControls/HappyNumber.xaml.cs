@@ -41,6 +41,7 @@ public partial class HappyNumber : ContentView
             if (happyNumber != null)
             {
                 this.happyNumber.Text = happyNumber;
+                StorageHandler.happyNumber = int.Parse(happyNumber);
             } 
             else
             {
