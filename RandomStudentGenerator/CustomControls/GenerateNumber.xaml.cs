@@ -15,7 +15,7 @@ public partial class GenerateNumber : ContentView
     private string? classNameCurrent;
     Random random = new Random();
     private static SerialPort? serialPort;
-    private string ComPortName = "COM4";
+    private string ComPortName = "COM7";
     private bool includeAbsent = false;
 
 
@@ -145,13 +145,15 @@ public partial class GenerateNumber : ContentView
             connectButton.Text = "Connect";
             connectButton.StyleClass = new[] { "buttonError" };
             serialPort.Close();
-            //colorPicker.Items.Clear();
-            //effectsPicker.Items.Clear();
+            colorPicker.IsEnabled = false;
+            effectsPicker.IsEnabled = false;
         }
         else 
         {
             connectButton.Text = "Disconnect";
             connectButton.StyleClass = new[] { "empty" };
+            colorPicker.IsEnabled = true;
+            effectsPicker.IsEnabled = true;
             try
             {
                 serialPort.Open();
