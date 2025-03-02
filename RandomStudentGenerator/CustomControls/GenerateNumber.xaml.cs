@@ -16,7 +16,7 @@ public partial class GenerateNumber : ContentView
     Random random = new Random();
     private static SerialPort? serialPort;
     private string ComPortName = "COM4";
-    private bool includeAbsent = true;
+    private bool includeAbsent = false;
 
 
     public GenerateNumber()
@@ -28,6 +28,7 @@ public partial class GenerateNumber : ContentView
             serialPort.DataReceived += SerialPort_DataReceived;
         }
         LoadNumberPools();
+        LoadCheckBox();
     }
 
     private async void generateButton_Clicked(object sender, EventArgs e)
@@ -90,7 +91,7 @@ public partial class GenerateNumber : ContentView
 
         int classSize = StorageHandler.currentClassSize;
         if (classSize <= 0) return -1;
-        if(includeAbsent && !StorageHandler.currentClassModel.Students.Any(s => s.CurrentPresence.isPresent == true)) return -1;
+        if(!includeAbsent && !StorageHandler.currentClassModel.Students.Any(s => s.CurrentPresence.isPresent == true)) return -1;
 
         int number;
         do
@@ -98,7 +99,7 @@ public partial class GenerateNumber : ContentView
             number = random.Next(1, classSize + 1);
         } while (lastThreePool.Contains(number)
                  || number == StorageHandler.happyNumber
-                 || (!StorageHandler.currentClassModel.Students[number - 1].CurrentPresence.isPresent && includeAbsent));
+                 || (!StorageHandler.currentClassModel.Students[number - 1].CurrentPresence.isPresent && !includeAbsent));
 
         lastThreePool.Add(number);
         if (lastThreePool.Count > 3) lastThreePool.RemoveAt(0);
@@ -120,6 +121,16 @@ public partial class GenerateNumber : ContentView
         }
     }
 
+    private async void LoadCheckBox()
+    {
+        string? savedIncludeAbsent = await SecureStorage.GetAsync("includeAbsent");
+        if (!string.IsNullOrEmpty(savedIncludeAbsent))
+        {
+            includeAbsent = bool.Parse(savedIncludeAbsent);
+            includeAbsentCheckBox.IsChecked = includeAbsent;
+        }
+    }
+
     private async Task SaveNumberPools()
     {
         await SecureStorage.SetAsync("classNumberPools", JsonSerializer.Serialize(classNumberPools));
@@ -129,7 +140,7 @@ public partial class GenerateNumber : ContentView
     {
         if (serialPort == null || !OperatingSystem.IsWindows()) return;
 
-        if (serialPort.IsOpen)
+        if (serialPort.IsOpen) 
         {
             connectButton.Text = "Connect";
             connectButton.StyleClass = new[] { "buttonError" };
@@ -137,7 +148,7 @@ public partial class GenerateNumber : ContentView
             //colorPicker.Items.Clear();
             //effectsPicker.Items.Clear();
         }
-        else
+        else 
         {
             connectButton.Text = "Disconnect";
             connectButton.StyleClass = new[] { "empty" };
@@ -174,11 +185,11 @@ public partial class GenerateNumber : ContentView
     private void effectsPicker_SelectedIndexChanged(object sender, EventArgs e)
     {
         executeCommand("setEffect", effectsPicker.SelectedItem.ToString());
-
     }
 
-    private void includeAbsentCheckBox_CheckedChanged(object sender, CheckedChangedEventArgs e)
+    private async void includeAbsentCheckBox_CheckedChanged(object sender, CheckedChangedEventArgs e)
     {
-        includeAbsent = !includeAbsent;
+        includeAbsent = e.Value;
+        await SecureStorage.SetAsync("includeAbsent", includeAbsent.ToString());
     }
 }
