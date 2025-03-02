@@ -6,46 +6,72 @@
     <ContentView.Resources>
         <StyleSheet Source="/Styles/List.css" />
     </ContentView.Resources>
+    
     <Grid
         RowDefinitions="*, 80"
         RowSpacing="20"
         StyleClass="tableWrapper">
+        
         <ScrollView Grid.Row="0">
+            
             <StackLayout>
+                
                 <Grid ColumnDefinitions="1*, 3*, 4*" StyleClass="header">
                     <Label Grid.Column="0" Text="Nr" />
                     <Label Grid.Column="1" Text="Student" />
                     <HorizontalStackLayout Grid.Column="2">
                         <Label Text="Attendance" />
-                        <DatePicker x:Name="presenceDate" DateSelected="DatePicker_DateSelected" StyleClass="datePicker" Date="{Binding SelectedDate, Mode=TwoWay}" />
+                        <DatePicker
+                            x:Name="presenceDate"
+                            Date="{Binding SelectedDate, Mode=TwoWay}"
+                            DateSelected="DatePicker_DateSelected"
+                            StyleClass="datePicker" />
                     </HorizontalStackLayout>
                 </Grid>
+                
                 <CollectionView x:Name="studentsList" ItemsSource="{Binding Students}">
                     <CollectionView.ItemTemplate>
+                        
                         <DataTemplate>
                             <StackLayout StyleClass="studentWrapper">
+                                
                                 <Grid ColumnDefinitions="1*, 3*, 3*, 1*" StyleClass="studentGrid">
+                                    
                                     <Label
                                         Grid.Column="0"
                                         Text="{Binding Id}"
                                         VerticalOptions="Center" />
+                                    
                                     <HorizontalStackLayout Grid.Column="1">
-                                        <Entry StyleClass="listEntry" Text="{Binding Name}" />
-                                        <Entry StyleClass="listEntry" Text="{Binding Surname}" />
+                                        <Entry
+                                            x:Name="NameEntry"
+                                            StyleClass="listEntry"
+                                            Text="{Binding Name}"
+                                            TextChanged="Entry_TextChanged" />
+                                        <Entry
+                                            x:Name="SurnameEntry"
+                                            StyleClass="listEntry"
+                                            Text="{Binding Surname}"
+                                            TextChanged="Entry_TextChanged" />
                                     </HorizontalStackLayout>
+                                    
                                     <CheckBox
                                         x:Name="AttendanceCheckbox"
+                                        StyleClass="AttendanceCheckbox"
                                         Grid.Column="2"
-                                        IsChecked="{Binding CurrentPresence.isPresent}"
-                                        CheckedChanged="AttendanceCheckbox_CheckedChanged"/>
+                                        CheckedChanged="AttendanceCheckbox_CheckedChanged"
+                                        IsChecked="{Binding CurrentPresence.isPresent}" />
+                                    
                                     <Button
                                         Grid.Column="3"
                                         Command="{Binding BindingContext.deleteStudentCommand, Source={x:Reference studentsList}}"
                                         CommandParameter="{Binding}"
                                         Text="Delete" />
                                 </Grid>
+                                
                             </StackLayout>
                         </DataTemplate>
+                        
                     </CollectionView.ItemTemplate>
                 </CollectionView>
             </StackLayout>
@@ -68,5 +94,6 @@
                     Text="Add Student" />
             </FlexLayout>
         </Frame>
+        
     </Grid>
 </ContentView>

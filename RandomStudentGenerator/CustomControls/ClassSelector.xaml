@@ -8,23 +8,27 @@
     </ContentView.Resources>
     <Frame StyleClass="box">
         <FlexLayout StyleClass="selectorBox">
-            <Picker StyleId="classPicker" x:Name="classPicker" SelectedIndexChanged="classPicker_SelectedIndexChanged" />
+            <Picker
+                x:Name="classPicker"
+                SelectedIndexChanged="classPicker_SelectedIndexChanged"
+                StyleId="classPicker" />
+            
             <Button
                 x:Name="addClassButton"
                 Clicked="addClassButton_Clicked"
-                Text="Add From File"
-                StyleClass="selectButton" />
-
-            <Button
-                x:Name="newClassButton"
-                Clicked="newClassButton_Clicked"
-                Text="New Class"
-                StyleClass="selectButton"/>
+                StyleClass="selectButton"
+                Text="Add From File" />
 
             <Entry
                 x:Name="newClassName"
                 Placeholder="Enter Class Name"
                 StyleClass="entry" />
+
+            <Button
+                x:Name="newClassButton"
+                Clicked="newClassButton_Clicked"
+                StyleClass="selectButton"
+                Text="New Class" />
 
         </FlexLayout>
     </Frame>
