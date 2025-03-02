@@ -228,7 +228,7 @@ namespace RandomStudentGenerator.StorageHandlers
             using (var stream = new StreamReader(filePath))
             using (var csv = new CsvReader(stream, config))
             {
-                var records = csv.GetRecords<Student>().ToList();
+                var records = csv.GetRecords<dynamic>().ToList();
                 return records.Count;
             }
         }
@@ -251,7 +251,7 @@ namespace RandomStudentGenerator.StorageHandlers
                 using (var stream = new StreamReader(filePath))
                 using (var csv = new CsvReader(stream, config))
                 {
-                    var records = csv.GetRecords<Student>().ToList();
+                    var records = csv.GetRecords<dynamic>().ToList();
                     if (records.Count > happyNumberMax)
                     {
                         happyNumberMax = records.Count;
