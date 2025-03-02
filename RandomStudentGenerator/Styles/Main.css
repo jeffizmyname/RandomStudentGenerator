@@ -1,17 +1,17 @@
 ﻿/*
-    --text: #ebe4ea;
+--text: #ebe4ea;
 --background: #190f18;
 --primary: #d099ca;
 --secondary: #7b2b73;
 --accent: #cf43c1;
 
-    --text: #e6edde;
+--text: #e6edde;
 --background: #0c1008;
 --primary: #b6cb9e;
 --secondary: #3c7051;
 --accent: #63ab90;
 
-    --text: #f4e5f9;
+--text: #f4e5f9;
 --background: #0a030d;
 --primary: #ce95e8;
 --secondary: #811c60;
@@ -21,7 +21,7 @@
 
 .mainGrid {
     background-color: #0c1008;
-    color: #e6edde;
+    color: #cee8b0;
     padding: 8;
     font-family: Gabarito;
 }
@@ -33,4 +33,5 @@
 
 ^Button {
     background: #b6cb9e;
+    font-size: 15;
 }

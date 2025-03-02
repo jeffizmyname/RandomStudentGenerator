@@ -6,7 +6,7 @@
 
 .selectButton {
     background: #b6cb9e;
-    margin-right: 5;
+    margin-right: 10;
 }
 
 .box {
@@ -15,6 +15,10 @@
 
 #classPicker {
     width: 150;
-    margin-right: 10;
+    margin-right: 5;
 }
 
+.entry {
+    width: 250;
+    margin-right: 5;
+}
