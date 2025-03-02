@@ -32,38 +32,38 @@ namespace RandomStudentGenerator.ViewModels
 
         public ClassViewModel()
         {
-            deleteStudentCommand = new Command<Student>(deleteStudent);
+            deleteStudentCommand = new Command<Student>(DeleteStudent);
         }
 
-        public void newClass(string className)
+        public void NewClass(string className)
         {
             CreateNewClass(className);
-            setClass(className);
+            SetClass(className);
         }
 
-        public void addStudent(string name, string surname)
+        public void AddStudent(string name, string surname)
         {
             if(Class == null) return;
             var student = new Student(0, name, surname);
             Class.students.Add(student);
-            sortStudents();
-            AddStudent(Students.ToList(), Class.className);
+            SortStudents();
+            StorageHandlers.StorageHandler.AddStudent(Students.ToList(), Class.className);
         }
 
-        public void updateClass()
+        public void UpdateClass()
         {
             if (Class == null) return;
-            AddStudent(Students.ToList(), Class.className);
+            StorageHandlers.StorageHandler.AddStudent(Students.ToList(), Class.className);
         }
 
-        private void deleteStudent(Student student)
+        private void DeleteStudent(Student student)
         {
             Class.students.Remove(student);
-            sortStudents();
-            AddStudent(Students.ToList(), Class.className);
+            SortStudents();
+            StorageHandlers.StorageHandler.AddStudent(Students.ToList(), Class.className);
         }
 
-        public void setClass(string className)
+        public void SetClass(string className)
         {
 
             Class = ReadClass(className, SelectedDate);
@@ -77,7 +77,7 @@ namespace RandomStudentGenerator.ViewModels
             }
         }
 
-        public void sortStudents()
+        public void SortStudents()
         {
             Students.Clear();
             var sortedStudents = Class.students.OrderBy(s => s.Name).ToList();
@@ -88,7 +88,7 @@ namespace RandomStudentGenerator.ViewModels
             }
         }
 
-        public void setStudentPresence(Student student, bool isPresent)
+        public void SetStudentPresence(Student student, bool isPresent)
         {
             if (student == null) return;
 

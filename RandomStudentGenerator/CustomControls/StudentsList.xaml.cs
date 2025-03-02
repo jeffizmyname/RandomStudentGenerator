@@ -18,20 +18,20 @@ public partial class StudentsList : ContentView
 
     public void UpdateData(string className)
     {
-        _classViewModel.setClass(className);
+        _classViewModel.SetClass(className);
         StorageHandler.currentClassModel = _classViewModel;
     }
 
     public void CreateClass(string className)
     {
-        _classViewModel.newClass(className);
+        _classViewModel.NewClass(className);
         UpdateData(className);
     }
 
-    private void addStudentButton_Clicked(object sender, EventArgs e)
+    private void AddStudentButton_Clicked(object sender, EventArgs e)
     {
         if (string.IsNullOrEmpty(newStudentName.Text) || string.IsNullOrEmpty(newStudentSurname.Text)) return; // tez cos zrobic??
-        _classViewModel.addStudent(newStudentName.Text, newStudentSurname.Text);
+        _classViewModel.AddStudent(newStudentName.Text, newStudentSurname.Text);
     }
 
     private void DatePicker_DateSelected(object sender, DateChangedEventArgs e)
@@ -43,14 +43,14 @@ public partial class StudentsList : ContentView
     {
         if (sender is CheckBox toggle && toggle.BindingContext is Student student)
         {
-            _classViewModel.setStudentPresence(student, e.Value);
-            StorageHandler.savePresence(_classViewModel.Class.className, _classViewModel.Class.students.ToList());
+            _classViewModel.SetStudentPresence(student, e.Value);
+            StorageHandler.SavePresence(_classViewModel.Class.className, _classViewModel.Class.students.ToList());
         }
     }
 
     private void Entry_TextChanged(object sender, TextChangedEventArgs e)
     {
-        _classViewModel.updateClass();
+        _classViewModel.UpdateClass();
     }
 
 }

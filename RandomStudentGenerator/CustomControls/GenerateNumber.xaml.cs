@@ -15,7 +15,7 @@ public partial class GenerateNumber : ContentView
     private string? classNameCurrent;
     Random random = new Random();
     private static SerialPort? serialPort;
-    private string ComPortName = "COM7";
+    private string ComPortName = "COM4";
     private bool includeAbsent = false;
 
 
@@ -31,9 +31,9 @@ public partial class GenerateNumber : ContentView
         LoadCheckBox();
     }
 
-    private async void generateButton_Clicked(object sender, EventArgs e)
+    private async void GenerateButton_Clicked(object sender, EventArgs e)
     {
-        int result = await generateRandomNumber();
+        int result = await GenerateRandomNumber();
         generatedNumber.Text = result.ToString();
     }
 
@@ -46,7 +46,7 @@ public partial class GenerateNumber : ContentView
             Debug.Write(data);
             if (data.Contains("1"))
             {
-                string dataSend = (await generateRandomNumber()).ToString();
+                string dataSend = (await GenerateRandomNumber()).ToString();
                 MainThread.BeginInvokeOnMainThread(() => generatedNumber.Text = dataSend);
                 serialPort.WriteLine(dataSend);
                 Debug.WriteLine("data to send: " + dataSend);
@@ -75,7 +75,7 @@ public partial class GenerateNumber : ContentView
         }
     }
 
-    private async Task<int> generateRandomNumber()
+    private async Task<int> GenerateRandomNumber()
     {
         if (classNameCurrent != StorageHandler.currentClass)
         {
@@ -136,7 +136,7 @@ public partial class GenerateNumber : ContentView
         await SecureStorage.SetAsync("classNumberPools", JsonSerializer.Serialize(classNumberPools));
     }
 
-    private void connectButton_Clicked(object sender, EventArgs e)
+    private void ConnectButton_Clicked(object sender, EventArgs e)
     {
         if (serialPort == null || !OperatingSystem.IsWindows()) return;
 
@@ -158,9 +158,9 @@ public partial class GenerateNumber : ContentView
             {
                 serialPort.Open();
                 Debug.WriteLine("Port opened", ComPortName);
-                executeCommand("effects");
+                ExecuteCommand("effects");
                 Thread.Sleep(1000);
-                executeCommand("colors");
+                ExecuteCommand("colors");
             }
             catch (UnauthorizedAccessException)
             {
@@ -173,23 +173,23 @@ public partial class GenerateNumber : ContentView
         }
     }
 
-    private void executeCommand(string command, string parameter = "")
+    private void ExecuteCommand(string command, string parameter = "")
     {
         if (serialPort == null || !OperatingSystem.IsWindows()) return;
         serialPort.WriteLine($"command:{command}:{parameter}");
     }
 
-    private void colorPicker_SelectedIndexChanged(object sender, EventArgs e)
+    private void ColorPicker_SelectedIndexChanged(object sender, EventArgs e)
     {
-        executeCommand("setColor", colorPicker.SelectedItem.ToString());
+        ExecuteCommand("setColor", colorPicker.SelectedItem.ToString());
     }
 
-    private void effectsPicker_SelectedIndexChanged(object sender, EventArgs e)
+    private void EffectsPicker_SelectedIndexChanged(object sender, EventArgs e)
     {
-        executeCommand("setEffect", effectsPicker.SelectedItem.ToString());
+        ExecuteCommand("setEffect", effectsPicker.SelectedItem.ToString());
     }
 
-    private async void includeAbsentCheckBox_CheckedChanged(object sender, CheckedChangedEventArgs e)
+    private async void IncludeAbsentCheckBox_CheckedChanged(object sender, CheckedChangedEventArgs e)
     {
         includeAbsent = e.Value;
         await SecureStorage.SetAsync("includeAbsent", includeAbsent.ToString());

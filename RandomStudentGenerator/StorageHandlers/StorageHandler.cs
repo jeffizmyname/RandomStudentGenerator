@@ -38,7 +38,7 @@ namespace RandomStudentGenerator.StorageHandlers
             var destPath = Path.Combine(rootPath, fileName);
             File.Copy(filePath, destPath, true);
             currentClass = fileName;
-            currentClassSize = getClassSize(fileName);
+            currentClassSize = GetClassSize(fileName);
         }
 
         public static void CreateNewClass(string className)
@@ -154,7 +154,7 @@ namespace RandomStudentGenerator.StorageHandlers
             currentClassSize = students.Count;
         }
 
-        public static void savePresence(string className, List<Student> students)
+        public static void SavePresence(string className, List<Student> students)
         {
             Init();
             var filePath = Path.Combine(rootPath, className + ".csv");
@@ -212,7 +212,7 @@ namespace RandomStudentGenerator.StorageHandlers
             }
         }
 
-        public static int getClassSize(string className)
+        public static int GetClassSize(string className)
         {
             Init();
             var filePath = Path.Combine(rootPath, className + ".csv");
@@ -233,7 +233,7 @@ namespace RandomStudentGenerator.StorageHandlers
             }
         }
 
-        public static int getMaxHappyNumber()
+        public static int GetMaxHappyNumber()
         {
             Init();
             foreach (var className in ReadClassNames())
