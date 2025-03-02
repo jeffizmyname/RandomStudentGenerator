@@ -47,4 +47,10 @@ public partial class StudentsList : ContentView
             StorageHandler.savePresence(_classViewModel.Class.className, _classViewModel.Class.students.ToList());
         }
     }
+
+    private void Entry_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        _classViewModel.updateClass();
+    }
+
 }

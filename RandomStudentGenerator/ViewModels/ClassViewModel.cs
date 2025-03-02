@@ -50,6 +50,12 @@ namespace RandomStudentGenerator.ViewModels
             AddStudent(Students.ToList(), Class.className);
         }
 
+        public void updateClass()
+        {
+            if (Class == null) return;
+            AddStudent(Students.ToList(), Class.className);
+        }
+
         private void deleteStudent(Student student)
         {
             Class.students.Remove(student);
