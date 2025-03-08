@@ -107,6 +107,8 @@ public partial class GenerateNumber : ContentView
         Debug.WriteLine("Generated number: " + number);
         Debug.WriteLine("Updated pool: " + String.Join(",", lastThreePool));
 
+        LastDrawsList.Text = $"Last draws: {string.Join("  ", lastThreePool)}";
+
         await SaveNumberPools();
         return number;
     }
@@ -118,6 +120,8 @@ public partial class GenerateNumber : ContentView
         {
             classNumberPools = JsonSerializer.Deserialize<Dictionary<string, List<int>>>(savedPools)
                                ?? new Dictionary<string, List<int>>();
+            if(classNameCurrent != null && classNumberPools.ContainsKey(classNameCurrent))
+                LastDrawsList.Text = $"Last draws: {string.Join("  ", classNumberPools[classNameCurrent])}";
         }
     }
 
@@ -193,5 +197,16 @@ public partial class GenerateNumber : ContentView
     {
         includeAbsent = e.Value;
         await SecureStorage.SetAsync("includeAbsent", includeAbsent.ToString());
+    }
+
+    public void UpdateData(string className)
+    {
+        if(classNumberPools.ContainsKey(className))
+        {
+            LastDrawsList.Text = $"Last draws: {string.Join("  ", classNumberPools[className])}";
+        } else
+        {
+            LastDrawsList.Text = "Last draws: ";
+        }
     }
 }

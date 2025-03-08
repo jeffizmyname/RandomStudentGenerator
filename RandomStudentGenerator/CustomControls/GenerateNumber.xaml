@@ -13,7 +13,7 @@
                 Grid.Row="0"
                 HorizontalOptions="Center"
                 StyleClass="generatedNumber"
-                Text="" />
+                Text=":&lt;" />
 
             <Grid
                 Grid.Row="1"
@@ -25,6 +25,14 @@
                     <CheckBox x:Name="includeAbsentCheckBox" CheckedChanged="IncludeAbsentCheckBox_CheckedChanged" />
                     <Label Text="Include Absent" VerticalOptions="Center" />
                 </HorizontalStackLayout>
+
+                <Label
+                    Grid.Row="0"
+                    Grid.Column="2"
+                    Grid.ColumnSpan="2"
+                    Text="Last draws: "
+                    x:Name="LastDrawsList"
+                    VerticalOptions="Center" />
 
                 <Button
                     x:Name="generateButton"
