@@ -15,6 +15,6 @@ namespace RandomStudentGenerator.Models
         {
             this.className = className;
             this.students = students;
-    }
+        }
     }
 }
