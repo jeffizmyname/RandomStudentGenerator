@@ -30,7 +30,7 @@ public partial class StudentsList : ContentView
 
     private void AddStudentButton_Clicked(object sender, EventArgs e)
     {
-        if (string.IsNullOrEmpty(newStudentName.Text) || string.IsNullOrEmpty(newStudentSurname.Text)) return; // tez cos zrobic??
+        if (string.IsNullOrEmpty(newStudentName.Text) || string.IsNullOrEmpty(newStudentSurname.Text)) return;
         _classViewModel.AddStudent(newStudentName.Text, newStudentSurname.Text);
     }
 
