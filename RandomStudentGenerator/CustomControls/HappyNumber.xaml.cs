@@ -53,6 +53,6 @@ public partial class HappyNumber : ContentView
 
             }
         }
-
+        
     }
 }
