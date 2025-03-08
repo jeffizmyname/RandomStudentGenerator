@@ -8,7 +8,7 @@
     </ContentView.Resources>
     
     <Grid
-        RowDefinitions="*, 80"
+        RowDefinitions="*, 90"
         RowSpacing="20"
         StyleClass="tableWrapper">
         
@@ -78,7 +78,7 @@
         </ScrollView>
 
         <Frame Grid.Row="1" StyleClass="box, addStudentBox">
-            <FlexLayout StyleClass="addStudentFlex">
+            <HorizontalStackLayout>
                 <Entry
                     x:Name="newStudentName"
                     Placeholder="Enter Student Name"
@@ -92,8 +92,7 @@
                     Clicked="AddStudentButton_Clicked"
                     StyleClass="button"
                     Text="Add Student" />
-            </FlexLayout>
+            </HorizontalStackLayout>
         </Frame>
-        
     </Grid>
 </ContentView>
