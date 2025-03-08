@@ -50,6 +50,11 @@ public partial class StudentsList : ContentView
 
     private void Entry_TextChanged(object sender, TextChangedEventArgs e)
     {
+        if(string.IsNullOrEmpty(e.NewTextValue) || string.IsNullOrWhiteSpace(e.NewTextValue))
+        {
+            Entry entry = (Entry)sender;
+            entry.Text = e.OldTextValue;
+        }
         _classViewModel.UpdateClass();
     }
 
