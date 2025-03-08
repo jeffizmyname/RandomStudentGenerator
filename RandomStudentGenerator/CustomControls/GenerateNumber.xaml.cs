@@ -34,6 +34,7 @@ public partial class GenerateNumber : ContentView
     private async void GenerateButton_Clicked(object sender, EventArgs e)
     {
         int result = await GenerateRandomNumber();
+        if(result == -1) return;
         generatedNumber.Text = result.ToString();
     }
 
@@ -43,10 +44,11 @@ public partial class GenerateNumber : ContentView
         try
         {
             string data = serialPort.ReadLine();
-            Debug.Write(data);
+            Debug.Write("[SERIAL] "+data);
             if (data.Contains("1"))
             {
                 string dataSend = (await GenerateRandomNumber()).ToString();
+                if (dataSend == "-1") return;
                 MainThread.BeginInvokeOnMainThread(() => generatedNumber.Text = dataSend);
                 serialPort.WriteLine(dataSend);
                 Debug.WriteLine("data to send: " + dataSend);
@@ -90,8 +92,30 @@ public partial class GenerateNumber : ContentView
         List<int> lastThreePool = classNumberPools[classNameCurrent];
 
         int classSize = StorageHandler.currentClassSize;
-        if (classSize <= 0) return -1;
-        if(!includeAbsent && !StorageHandler.currentClassModel.Students.Any(s => s.CurrentPresence.isPresent == true)) return -1;
+        if(classNameCurrent == "")
+        {
+            if(Window.Page != null)
+                await Window.Page.DisplayAlert("Error", "No class selected", "OK");
+            return -1;
+        }
+        if (classSize <= 3)
+        {
+            if (Window.Page != null)
+                await Window.Page.DisplayAlert("Error", "You need 4 or more people to begin drawing number", "OK");
+            return -1;
+        }
+        if (!includeAbsent && !StorageHandler.currentClassModel.Students.Any(s => s.CurrentPresence.isPresent == true))
+        {
+            if (Window.Page != null)
+                await Window.Page.DisplayAlert("Error", "No one is selected", "OK");
+            return -1;
+        }
+        if(!includeAbsent && StorageHandler.currentClassModel.Students.Count(s => s.CurrentPresence.isPresent == true) <= 3)
+        {
+            if (Window.Page != null)
+                await Window.Page.DisplayAlert("Error", "You need 4 or more people to begin drawing number", "OK");
+            return -1;
+        }
 
         int number;
         do
@@ -140,7 +164,7 @@ public partial class GenerateNumber : ContentView
         await SecureStorage.SetAsync("classNumberPools", JsonSerializer.Serialize(classNumberPools));
     }
 
-    private void ConnectButton_Clicked(object sender, EventArgs e)
+    private async void ConnectButton_Clicked(object sender, EventArgs e)
     {
         if (serialPort == null || !OperatingSystem.IsWindows()) return;
 
@@ -154,7 +178,6 @@ public partial class GenerateNumber : ContentView
         }
         else 
         {
-            connectButton.Text = "Disconnect";
             connectButton.StyleClass = new[] { "empty" };
             colorPicker.IsEnabled = true;
             effectsPicker.IsEnabled = true;
@@ -162,6 +185,7 @@ public partial class GenerateNumber : ContentView
             {
                 serialPort.Open();
                 Debug.WriteLine("Port opened", ComPortName);
+                connectButton.Text = "Disconnect";
                 ExecuteCommand("effects");
                 Thread.Sleep(1000);
                 ExecuteCommand("colors");
@@ -169,10 +193,16 @@ public partial class GenerateNumber : ContentView
             catch (UnauthorizedAccessException)
             {
                 Debug.WriteLine("Error: Port is in use", ComPortName);
+                if (Window.Page != null)
+                    await Window.Page.DisplayAlert("Error", "Port is in use", "OK");
+                connectButton.Text = "Connect";
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"Error opening port: {ex.Message}");
+                if (Window.Page != null)
+                    await Window.Page.DisplayAlert("Error", "Error opening port", "OK");
+                connectButton.Text = "Connect";
             }
         }
     }
