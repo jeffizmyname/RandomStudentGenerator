@@ -1,4 +1,5 @@
 ![XD](https://waifu-parser.vercel.app/getImage?tags=waifu&height=<2000)
+Made With ![](https://img.shields.io/badge/%20-waifu_parser-8A2BE2?logo=github)
 # Me when maui
 ```
 ⠀⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⡄⡀⠀⠀⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⡄
