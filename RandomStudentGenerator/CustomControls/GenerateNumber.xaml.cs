@@ -8,6 +8,7 @@ using System.Text.Json;
 using Microsoft.Maui.Controls;
 using System.Data;
 using CommunityToolkit.Mvvm.ComponentModel;
+using System.Runtime.InteropServices;
 
 public partial class GenerateNumber : ContentView 
 {
@@ -15,7 +16,7 @@ public partial class GenerateNumber : ContentView
     private string? classNameCurrent;
     Random random = new Random();
     private static SerialPort? serialPort;
-    private string ComPortName = "COM4";
+    private string ComPortName = "COM7";
     private bool includeAbsent = false;
 
 
@@ -40,40 +41,59 @@ public partial class GenerateNumber : ContentView
 
     private async void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
     {
-        if (serialPort == null || !OperatingSystem.IsWindows()) return;
-        try
+        if (serialPort == null || !OperatingSystem.IsWindows())
         {
-            string data = serialPort.ReadLine();
-            Debug.Write("[SERIAL] "+data);
-            if (data.Contains("1"))
-            {
-                string dataSend = (await GenerateRandomNumber()).ToString();
-                if (dataSend == "-1") return;
-                MainThread.BeginInvokeOnMainThread(() => generatedNumber.Text = dataSend);
-                serialPort.WriteLine(dataSend);
-                Debug.WriteLine("data to send: " + dataSend);
-            } 
-            else if(data.Contains("effects:")) 
-            {
-                string[] effects = data.Remove(0, 8).Remove(data.Length-9).Split(',');
-                MainThread.BeginInvokeOnMainThread(() => {
-                    effectsPicker.ItemsSource = effects;
-                    effectsPicker.SelectedIndex = 0;
-                });
-                
-            }
-            else if(data.Contains("colors:"))
-            {
-                string[] colors = data.Remove(0, 7).Remove(data.Length - 8).Split(',');
-                MainThread.BeginInvokeOnMainThread(() => {
-                    colorPicker.ItemsSource = colors;
-                    colorPicker.SelectedIndex = 0;
-                });
-            }
         }
-        catch (Exception ex)
+        else
         {
-            Debug.WriteLine($"Error reading data: {ex}");
+            try
+            {
+                string data = serialPort.ReadLine();
+                Debug.Write("[SERIAL] " + data);
+                if (data.Contains("1"))
+                {
+                    string dataSend = (await GenerateRandomNumber()).ToString();
+                    if (dataSend != "-1") {
+
+                        MainThread.BeginInvokeOnMainThread(() =>
+                        {
+                            generatedNumber.Text = dataSend;
+                        });
+                        serialPort.WriteLine(dataSend);
+                        Debug.WriteLine("data to send: " + dataSend);
+                    } else
+                    {
+                        serialPort.WriteLine(":<");
+                        Debug.WriteLine("data to send: " + dataSend);
+                    }
+                    
+                    
+                }
+                else if (data.Contains("effects:"))
+                {
+                    string[] effects = data.Remove(0, 8).Remove(data.Length - 9).Split(',');
+                    MainThread.BeginInvokeOnMainThread(() =>
+                    {
+                        effectsPicker.ItemsSource = effects;
+                        effectsPicker.SelectedIndex = 0;
+                    });
+
+                }
+                else if (data.Contains("colors:"))
+                {
+                    string[] colors = data.Remove(0, 7).Remove(data.Length - 8).Split(',');
+                    MainThread.BeginInvokeOnMainThread(() =>
+                    {
+                        colorPicker.ItemsSource = colors;
+                        colorPicker.SelectedIndex = 0;
+                    });
+                }
+                else if (data.Contains("0")) { Debug.WriteLine("XD"); }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error reading data: {ex}");
+            }
         }
     }
 
@@ -92,28 +112,29 @@ public partial class GenerateNumber : ContentView
         List<int> lastThreePool = classNumberPools[classNameCurrent];
 
         int classSize = StorageHandler.currentClassSize;
+
         if(classNameCurrent == "")
         {
             if(Window.Page != null)
-                await Window.Page.DisplayAlert("Error", "No class selected", "OK");
+                MainThread.BeginInvokeOnMainThread(async () => await Window.Page.DisplayAlert("Error", "No class selected", "OK"));
             return -1;
         }
         if (classSize <= 3)
         {
             if (Window.Page != null)
-                await Window.Page.DisplayAlert("Error", "You need 4 or more people to begin drawing number", "OK");
+                MainThread.BeginInvokeOnMainThread(async () => await Window.Page.DisplayAlert("Error", "You need 4 or more people to begin drawing number", "OK"));
             return -1;
         }
         if (!includeAbsent && !StorageHandler.currentClassModel.Students.Any(s => s.CurrentPresence.isPresent == true))
         {
             if (Window.Page != null)
-                await Window.Page.DisplayAlert("Error", "No one is selected", "OK");
+                MainThread.BeginInvokeOnMainThread(async () => await Window.Page.DisplayAlert("Error", "No one is selected", "OK"));
             return -1;
         }
         if(!includeAbsent && StorageHandler.currentClassModel.Students.Count(s => s.CurrentPresence.isPresent == true) <= 3)
         {
             if (Window.Page != null)
-                await Window.Page.DisplayAlert("Error", "You need 4 or more people to begin drawing number", "OK");
+                MainThread.BeginInvokeOnMainThread(async () => await Window.Page.DisplayAlert("Error", "You need 4 or more people to begin drawing number", "OK"));
             return -1;
         }
 
@@ -131,7 +152,7 @@ public partial class GenerateNumber : ContentView
         Debug.WriteLine("Generated number: " + number);
         Debug.WriteLine("Updated pool: " + String.Join(",", lastThreePool));
 
-        LastDrawsList.Text = $"Last draws: {string.Join("  ", lastThreePool)}";
+        //LastDrawsList.Text = $"Last draws: {string.Join("  ", lastThreePool)}";
 
         await SaveNumberPools();
         return number;
@@ -144,8 +165,8 @@ public partial class GenerateNumber : ContentView
         {
             classNumberPools = JsonSerializer.Deserialize<Dictionary<string, List<int>>>(savedPools)
                                ?? new Dictionary<string, List<int>>();
-            if(classNameCurrent != null && classNumberPools.ContainsKey(classNameCurrent))
-                LastDrawsList.Text = $"Last draws: {string.Join("  ", classNumberPools[classNameCurrent])}";
+            //if(classNameCurrent != null && classNumberPools.ContainsKey(classNameCurrent))
+                //LastDrawsList.Text = $"Last draws: {string.Join("  ", classNumberPools[classNameCurrent])}";
         }
     }
 
@@ -200,9 +221,9 @@ public partial class GenerateNumber : ContentView
             catch (Exception ex)
             {
                 Debug.WriteLine($"Error opening port: {ex.Message}");
-                if (Window.Page != null)
-                    await Window.Page.DisplayAlert("Error", "Error opening port", "OK");
-                connectButton.Text = "Connect";
+                //if (Window.Page != null)
+                //    await Window.Page.DisplayAlert("Error", "Error opening port", "OK");
+                //connectButton.Text = "Connect";
             }
         }
     }
@@ -233,10 +254,10 @@ public partial class GenerateNumber : ContentView
     {
         if(classNumberPools.ContainsKey(className))
         {
-            LastDrawsList.Text = $"Last draws: {string.Join("  ", classNumberPools[className])}";
+            //LastDrawsList.Text = $"Last draws: {string.Join("  ", classNumberPools[className])}";
         } else
         {
-            LastDrawsList.Text = "Last draws: ";
+            //LastDrawsList.Text = "Last draws: ";
         }
     }
 }
